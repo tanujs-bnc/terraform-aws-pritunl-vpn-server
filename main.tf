@@ -73,11 +73,6 @@ resource "aws_ssm_parameter" "healthchecks_io_key" {
   value     = var.healthchecks_io_key
   key_id    = aws_kms_key.parameter_store.arn
   overwrite = true
-
-  tags = merge(
-    tomap("Name", format("%s/%s/%s", "pritunl", var.resource_name_prefix, "healthchecks-io-key")),
-    var.tags,
-  )
 }
 
 resource "aws_s3_bucket" "backup" {
@@ -107,10 +102,6 @@ resource "aws_s3_bucket" "backup" {
     abort_incomplete_multipart_upload_days = 7
   }
 
-  tags = merge(
-    tomap("Name", local.backup_bucket_name),
-    var.tags,
-  )
 }
 
 # ec2 iam role
@@ -203,10 +194,6 @@ resource "aws_security_group" "pritunl" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(
-    tomap("Name", format("%s-%s", var.resource_name_prefix, "vpn")),
-    var.tags,
-  )
 }
 
 resource "aws_security_group" "allow_from_office" {
@@ -248,11 +235,6 @@ resource "aws_security_group" "allow_from_office" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = merge(
-    tomap("Name", format("%s-%s", var.resource_name_prefix, "whitelist")),
-    var.tags,
-  )
 }
 
 resource "aws_instance" "pritunl" {
@@ -270,10 +252,6 @@ resource "aws_instance" "pritunl" {
   subnet_id            = var.public_subnet_id
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
-  tags = merge(
-    tomap("Name", format("%s-%s", var.resource_name_prefix, "vpn")),
-    var.tags,
-  )
 }
 
 resource "aws_eip" "pritunl" {
