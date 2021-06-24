@@ -53,11 +53,6 @@ resource "aws_kms_key" "parameter_store" {
   deletion_window_in_days = 30
   is_enabled              = true
   enable_key_rotation     = true
-
-  tags = merge(
-    tomap("Name", format("%s-%s", var.resource_name_prefix, "parameter-store")),
-    var.tags,
-  )
 }
 
 resource "aws_kms_alias" "parameter_store" {
